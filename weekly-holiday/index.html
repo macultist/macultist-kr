@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>주휴수당 계산기 (2027년 최저임금 10,700원 기준) | 월급과 세금(가칭)</title>
+<meta name="description" content="일주일에 일하기로 한 시간과 시급을 넣으면 주휴수당을 주 단위와 월 단위로 계산합니다. 주 15시간, 개근 조건과 단시간 근로자 계산법, 5명 미만 사업장, 그만두는 주의 주휴수당을 근로기준법 조문과 함께 정리했습니다.">
+<link rel="canonical" href="https://macultist.kr/weekly-holiday/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="/assets/site.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1134057369905383" crossorigin="anonymous"></script>
+</head>
+<body>
+<header class="site-head"><div class="wrap">
+  <a class="site-name" href="/">월급과 세금(가칭)</a>
+  <nav><a href="/#calc">계산기</a><a href="/guide/">해설 글</a><a href="/about/">소개</a></nav>
+</div></header>
+<main><div class="wrap">
+<h1>주휴수당 계산기</h1>
+<p class="lead">일주일에 일하기로 정한 시간과 시급을 넣으면 그 주에 받을 주휴수당과 한 달로 바꾼 금액을 계산합니다. 아르바이트처럼 주 40시간보다 짧게 일하는 사람도 같은 방식으로 셉니다.</p>
+<p class="meta">기준: 근로기준법 제18조, 제55조, 시행령 제30조, 최저임금 고시 / 수치 확인일 2026-11-23</p>
+
+<form class="calc" id="calc" onsubmit="return false">
+  <div class="row">
+    <div class="field">
+      <label for="hours">1주 소정근로시간 (시간)</label>
+      <input id="hours" type="number" inputmode="decimal" min="0" max="52" step="0.5" value="20">
+      <div class="hint">근로계약서에 적힌 일하기로 한 시간. 연장근로는 빼고 넣습니다</div>
+    </div>
+    <div class="field">
+      <label for="wage">시급 (원)</label>
+      <input id="wage" type="number" inputmode="numeric" min="0" step="10" value="10700">
+      <div class="hint">2027년 최저임금 10,700원, 2026년 10,320원</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label><input id="full" type="checkbox" checked> 그 주에 일하기로 한 날을 모두 나왔습니다(개근)</label>
+    </div>
+  </div>
+
+  <div class="result" aria-live="polite">
+    <div class="meta">이번 주 주휴수당</div>
+    <div class="big" id="net">0원</div>
+    <div class="meta" id="netNote"></div>
+    <table><tbody id="lines"></tbody></table>
+  </div>
+</form>
+
+<h2>계산식</h2>
+<p>주휴수당은 일하지 않는 쉬는 날 하루에 대해 하루치 임금을 주는 것입니다(근로기준법 제55조 제1항). 하루치는 하루에 일하기로 한 시간에 시급을 곱한 금액입니다. 주 5일, 하루 8시간 일하는 사람은 8시간분을 받습니다.</p>
+<p>날마다 일하는 시간이 다르거나 주 40시간보다 짧게 일하는 사람은 아래 식으로 계산합니다. 고용노동부가 실무에서 쓰는 방식입니다(추정, 노동부 해석).</p>
+<p><strong>주휴수당 = 1주 소정근로시간 ÷ 40 × 8시간 × 시급</strong></p>
+<p>40시간을 넘게 정해도 40시간까지만 넣습니다. 법정 근로시간이 주 40시간이라 그 이상은 연장근로이기 때문입니다. 위 계산기도 40시간을 넘는 값은 40시간으로 계산합니다.</p>
+
+<h2>받으려면 두 가지가 맞아야 합니다</h2>
+<ol>
+  <li>주 15시간 이상: 4주 동안을 평균해 1주 소정근로시간이 15시간 미만이면 주휴일 규정이 적용되지 않습니다(근로기준법 제18조 제3항). 주 14시간 계약이면 주휴수당이 없고, 15시간이면 있습니다.</li>
+  <li>개근: 그 주에 일하기로 정한 날을 모두 나와야 합니다(시행령 제30조 제1항). 결근이 하루라도 있으면 그 주의 주휴수당은 없지만, 다음 주는 다시 따집니다.</li>
+</ol>
+<p>"소정근로시간"은 실제로 일한 시간이 아니라 근로계약에서 일하기로 정한 시간입니다. 사장이 일을 일찍 끝내 보내서 실제 일한 시간이 줄었다면 그 주도 계약상 시간으로 따집니다. 반대로 계약은 주 12시간인데 손님이 많아 실제로 16시간 일한 주가 있어도, 늘어난 몫은 연장근로라 주휴수당 조건이 되지 않는 것이 원칙입니다(추정). 이런 일이 자주 있다면 계약서를 실제 근무에 맞게 다시 쓰는 것이 맞습니다.</p>
+
+<h2>시간별 주휴수당 (2026년과 2027년 최저임금)</h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>1주 소정근로시간</th><th>2026년 주휴수당(10,320원)</th><th>2027년 주휴수당(10,700원)</th><th>2027년 한 달 환산</th></tr></thead>
+  <tbody>
+    <tr><td>14시간</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+    <tr><td>15시간</td><td class="num">30,960</td><td class="num">32,100</td><td class="num">139,482</td></tr>
+    <tr><td>20시간</td><td class="num">41,280</td><td class="num">42,800</td><td class="num">185,976</td></tr>
+    <tr><td>25시간</td><td class="num">51,600</td><td class="num">53,500</td><td class="num">232,470</td></tr>
+    <tr><td>30시간</td><td class="num">61,920</td><td class="num">64,200</td><td class="num">278,964</td></tr>
+    <tr><td>35시간</td><td class="num">72,240</td><td class="num">74,900</td><td class="num">325,458</td></tr>
+    <tr><td>40시간</td><td class="num">82,560</td><td class="num">85,600</td><td class="num">371,952</td></tr>
+  </tbody>
+</table></div>
+<p class="meta">단위 원, 원 미만 버림. 한 달 환산은 1주 금액 × 365 ÷ 7 ÷ 12 로 계산했습니다.</p>
+<p>주 40시간 일하는 사람의 2027년 최저 월급은 2,236,300원으로 고시되었습니다. 이 금액은 일한 40시간에 주휴 8시간을 더한 주 48시간을 한 달 209시간으로 바꿔 곱한 것입니다. 즉 월급제 근로자의 최저 월급에는 주휴수당이 이미 들어 있습니다. 위 표의 한 달 환산 371,952원과 일한 시간분을 더한 값이 고시 금액과 몇천 원 다른 것은 209시간이 끝수를 반올림한 값이기 때문입니다.</p>
+
+<h2>개근은 어떻게 따지나</h2>
+<p>개근은 일하기로 정한 날에 빠지지 않고 나왔다는 뜻입니다. 지각이나 조퇴는 결근이 아니므로 그것만으로 주휴수당이 없어지지 않습니다(추정, 노동부 해석). 연차휴가를 쓴 날, 회사 사정으로 쉰 날, 법이 정한 휴가로 쉰 날도 결근으로 보지 않는 것이 일반적입니다(추정). 아파서 빠진 날은 회사 규정에 병가가 있으면 그에 따르고, 없으면 결근이 될 수 있습니다.</p>
+
+<h2>5명 미만 사업장도 받습니다</h2>
+<p>편의점, 작은 식당처럼 상시 근로자가 5명 미만인 곳은 연장근로 가산수당, 연차휴가 같은 규정이 적용되지 않습니다. 하지만 주휴일(근로기준법 제55조 제1항)은 5명 미만 사업장에도 적용됩니다(근로기준법 시행령 제7조 별표 1, 추정). 그래서 사람 수가 적은 곳에서 일해도 주 15시간 이상이고 개근했다면 주휴수당을 받습니다.</p>
+
+<h2>그만두는 주의 주휴수당</h2>
+<p>마지막 주에 개근하고 그만둘 때 주휴수당이 생기는지는 자주 다투는 문제입니다. 고용노동부는 1주 동안 근로관계가 이어지고 그 주를 개근했다면 그 다음 날 출근이 예정되어 있지 않아도 주휴수당이 생긴다고 해석을 바꿨다고 알려져 있습니다(추정, 행정해석 원문 미확인). 금요일까지 일하고 그만두는 경우처럼 계산이 애매하면 고용노동부 상담센터(국번 없이 1350)에 날짜를 알려 주고 확인하세요.</p>
+
+<h2>받지 못했을 때</h2>
+<p>주휴수당은 임금이므로 주지 않으면 임금 체불입니다. 임금채권의 소멸시효는 3년이라 지난 3년치를 계산해 청구할 수 있습니다(근로기준법 제49조). 일한 날짜와 시간을 적은 기록, 근로계약서, 통장 입금 내역을 모아 두고 사업장에 먼저 요청하고, 해결되지 않으면 관할 지방고용노동관서에 진정을 낼 수 있습니다.</p>
+
+<div class="note warn">2027년 최저임금 10,700원은 고시가 끝난 확정값입니다. 주휴수당 계산 방식 가운데 단시간 근로자 비례 계산, 개근 판단, 마지막 주 처리는 법 조문이 아니라 고용노동부 해석을 따른 것이라 (추정)으로 표시했습니다. 해석이 바뀌면 고치겠습니다.</div>
+
+<h2>공식 출처</h2>
+<ul class="sources">
+  <li><a href="https://www.law.go.kr/법령/근로기준법/제55조" rel="nofollow">근로기준법 제55조(휴일)</a></li>
+  <li><a href="https://www.law.go.kr/법령/근로기준법/제18조" rel="nofollow">근로기준법 제18조(단시간근로자의 근로조건)</a></li>
+  <li><a href="https://www.law.go.kr/법령/근로기준법시행령/제30조" rel="nofollow">근로기준법 시행령 제30조(휴일)</a></li>
+  <li><a href="https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=19744" rel="nofollow">고용노동부: 2027년 적용 최저임금 고시</a></li>
+</ul>
+<h2>함께 읽을 글</h2>
+<ul>
+  <li><a href="/guide/weekly-holiday-pay/">주휴수당 조건: 주 15시간, 개근, 단시간 근로자</a></li>
+  <li><a href="/salary/">월급 실수령액 계산기</a></li>
+  <li><a href="/unemployment/">실업급여 계산기</a></li>
+</ul>
+<p class="note">이 계산기는 공개된 법령과 고시를 바탕으로 한 일반 정보이며 노무 상담이 아닙니다. 실제 지급액은 근로계약과 근무 기록에 따라 다를 수 있습니다. 개인 사정에 따른 판단은 고용노동부 상담센터(국번 없이 1350)에 확인하세요.</p>
+
+<script src="/assets/yearend.js"></script>
+<script src="/assets/labor.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var won = function (n) { return n.toLocaleString('ko-KR') + '원'; };
+  function run() {
+    var h = Math.max(0, +$('hours').value || 0), w = Math.max(0, +$('wage').value || 0), full = $('full').checked;
+    var wk = Labor.weeklyHoliday(h, w, full), mo = Math.floor(wk * 365 / 7 / 12);
+    $('net').textContent = won(wk);
+    $('netNote').textContent = h < 15 ? '주 15시간 미만이라 주휴수당이 없습니다' : !full ? '결근한 주는 주휴수당이 없습니다' : '한 달로 바꾸면 약 ' + won(mo);
+    var rows = [['1주 소정근로시간', h + '시간'], ['계산에 쓴 시간', (Math.min(h, 40) / 40 * 8).toFixed(1) + '시간'], ['시급', won(w)],
+      ['1주 주휴수당', won(wk)], ['한 달 환산', won(mo)]];
+    $('lines').innerHTML = rows.map(function (x, k) {
+      var tag = k === rows.length - 1 ? 'th' : 'td';
+      return '<tr><' + tag + '>' + x[0] + '</' + tag + '><' + tag + ' class="num">' + x[1] + '</' + tag + '></tr>';
+    }).join('');
+  }
+  $('calc').addEventListener('input', run);
+  run();
+})();
+</script>
+</div></main>
+<footer class="site-foot"><div class="wrap">
+  <nav><a href="/about/">소개</a><a href="/contact/">문의</a><a href="/privacy/">개인정보처리방침</a><a href="/disclaimer/">면책 고지</a></nav>
+  <div>이 사이트의 계산과 글은 일반 정보이며 세무, 노무 상담이 아닙니다.</div>
+</div></footer>
+</body>
+</html>

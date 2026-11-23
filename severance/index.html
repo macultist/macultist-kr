@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>퇴직금 계산기 (퇴직소득세, 실제 받는 금액까지) | 월급과 세금(가칭)</title>
+<meta name="description" content="입사일, 마지막 근무일, 최근 3개월 임금을 넣으면 평균임금으로 퇴직금을 계산하고 소득세법 제48조 방식으로 퇴직소득세와 지방소득세를 빼 실제 받는 금액까지 보여 줍니다. 1년, 주 15시간 요건과 상여금, 연차수당 반영법을 조문과 함께 정리했습니다.">
+<link rel="canonical" href="https://macultist.kr/severance/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="/assets/site.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1134057369905383" crossorigin="anonymous"></script>
+</head>
+<body>
+<header class="site-head"><div class="wrap">
+  <a class="site-name" href="/">월급과 세금(가칭)</a>
+  <nav><a href="/#calc">계산기</a><a href="/guide/">해설 글</a><a href="/about/">소개</a></nav>
+</div></header>
+<main><div class="wrap">
+<h1>퇴직금 계산기</h1>
+<p class="lead">입사일과 마지막 근무일, 그만두기 전 3개월 동안 받은 임금을 넣으면 법정 퇴직금을 계산합니다. 퇴직금에서 떼는 퇴직소득세와 지방소득세까지 빼서 통장에 들어올 금액도 함께 보여 줍니다.</p>
+<p class="meta">기준: 근로자퇴직급여 보장법 제8조, 근로기준법 제2조, 소득세법 제48조와 제55조 / 수치 확인일 2026-11-23</p>
+
+<form class="calc" id="calc" onsubmit="return false">
+  <div class="row">
+    <div class="field">
+      <label for="start">입사일</label>
+      <input id="start" type="date" value="2021-12-01">
+    </div>
+    <div class="field">
+      <label for="end">마지막 근무일</label>
+      <input id="end" type="date" value="2026-11-30">
+      <div class="hint">퇴직일은 이 다음 날입니다</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label for="wage3">퇴직 전 3개월 임금 합계 (만 원)</label>
+      <input id="wage3" type="number" inputmode="numeric" min="0" step="10" value="900">
+      <div class="hint">세금 떼기 전 금액. 기본급, 수당, 식대 포함</div>
+    </div>
+    <div class="field">
+      <label for="bonus">지난 1년 상여금 (만 원)</label>
+      <input id="bonus" type="number" inputmode="numeric" min="0" step="10" value="0">
+      <div class="hint">정기 상여. 3/12만 들어갑니다</div>
+    </div>
+    <div class="field">
+      <label for="leave">지난 1년 연차수당 (만 원)</label>
+      <input id="leave" type="number" inputmode="numeric" min="0" step="1" value="0">
+      <div class="hint">쓰지 못한 연차를 돈으로 받은 것. 3/12만 들어갑니다</div>
+    </div>
+  </div>
+
+  <div class="result" aria-live="polite">
+    <div class="meta">세금을 뺀 뒤 받는 퇴직금 (추정)</div>
+    <div class="big" id="net">0원</div>
+    <div class="meta" id="netNote"></div>
+    <div class="table-scroll"><table>
+      <tbody id="lines"></tbody>
+    </table></div>
+  </div>
+</form>
+<p class="meta">주 15시간 이상 일했고 퇴직연금이 아닌 법정 퇴직금을 IRP 해지 등으로 한꺼번에 받는다고 보고 계산했습니다. 원 미만은 버렸습니다.</p>
+
+<h2>퇴직금은 이렇게 계산합니다</h2>
+<p>법정 퇴직금은 계속 일한 기간 1년마다 30일분 이상의 평균임금입니다(퇴직급여법 제8조 제1항). 계산식으로 쓰면 다음과 같습니다.</p>
+<p><strong>퇴직금 = 1일 평균임금 x 30일 x (재직일수 / 365)</strong></p>
+<p>1일 평균임금은 그만두기 전 3개월 동안 받은 임금 총액을 그 3개월의 총일수로 나눈 금액입니다(근로기준법 제2조 제1항 제6호). 총일수는 달력 날짜 수라서 89일에서 92일 사이가 됩니다. 일한 날만 세는 것이 아니라 주말과 휴일도 모두 들어갑니다. 이렇게 구한 평균임금이 통상임금보다 낮으면 통상임금을 평균임금으로 씁니다(같은 조 제2항).</p>
+<p>예를 들어 월 300만 원을 받고 5년(1,826일) 일한 사람이 11월 30일까지 근무했다면, 9월부터 11월까지 3개월 임금 900만 원을 92일로 나눈 97,826원이 1일 평균임금입니다. 퇴직금은 97,826원 x 30 x 1,826 / 365로 약 1,468만 원입니다. 한 달 월급에 5년을 곱한 1,500만 원과 조금 다른 이유는 3개월 총일수가 92일로 길었기 때문입니다.</p>
+
+<h2>받을 수 있는 조건: 1년과 주 15시간</h2>
+<ul>
+  <li>계속 일한 기간이 1년 이상이어야 합니다. 1년에서 하루라도 모자라면 법정 퇴직금이 없습니다(퇴직급여법 제4조 제1항 단서).</li>
+  <li>4주 동안을 평균한 1주 소정근로시간이 15시간 이상이어야 합니다. 주 15시간 미만으로 정해진 단시간 근로자는 대상이 아닙니다.</li>
+  <li>정규직, 계약직, 아르바이트를 가리지 않습니다. 위 두 조건만 맞으면 근로계약서의 이름과 상관없이 받습니다.</li>
+  <li>5인 미만 사업장도 2010년 12월부터 적용되어 지금은 사업장 크기와 관계없습니다.</li>
+</ul>
+
+<h2>3개월 임금에 넣는 것과 빼는 것</h2>
+<p>평균임금에 들어가는 "임금"은 근로의 대가로 정기적으로 받은 돈 전부입니다. 기본급뿐 아니라 고정 수당, 연장근로수당, 식대도 들어갑니다. 비과세 식대라도 퇴직금 계산에서는 임금입니다.</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>항목</th><th>평균임금에 넣는 방법</th></tr></thead>
+  <tbody>
+    <tr><td>기본급, 고정 수당, 연장근로수당</td><td>3개월에 받은 금액 그대로</td></tr>
+    <tr><td>정기 상여금</td><td>퇴직 전 1년 동안 받은 금액의 3/12</td></tr>
+    <tr><td>연차수당</td><td>퇴직 전 1년 동안 받은 금액의 3/12 (추정, 노동부 해석 기준)</td></tr>
+    <tr><td>실비 변상, 경조사비, 일회성 격려금</td><td>넣지 않음</td></tr>
+  </tbody>
+</table></div>
+<p>상여금과 연차수당은 몇 달에 한 번 몰려서 나오기 때문에 마지막 3개월에 들어 있느냐에 따라 퇴직금이 크게 달라지는 문제가 있습니다. 그래서 1년 치를 모아 석 달 몫만 넣는 방식이 굳어졌습니다. 같은 예에서 상여금 600만 원, 연차수당 100만 원이 있었다면 평균임금은 116,847원, 퇴직금은 약 1,754만 원으로 늘어납니다.</p>
+<p>3개월 중에 수습 기간, 회사 사정으로 쉰 기간, 출산휴가, 육아휴직, 업무상 부상으로 쉰 기간이 끼어 있으면 그 기간과 그 기간의 임금을 빼고 계산합니다(근로기준법 시행령 제2조). 이런 기간이 있는 사람은 이 계산기 결과보다 회사 계산이 정확합니다.</p>
+
+<h2>퇴직소득세는 이렇게 뗍니다</h2>
+<p>퇴직금에는 근로소득세가 아니라 퇴직소득세가 붙습니다. 오래 모은 돈을 한꺼번에 받는다는 점을 고려해 세금이 많이 줄도록 만들어 둔 방식입니다(소득세법 제48조, 제55조 제2항).</p>
+<ol>
+  <li>퇴직금에서 근속연수공제를 뺍니다. 5년 이하는 1년에 100만 원, 5년 넘게는 구간별로 200만 원, 250만 원, 300만 원씩 늘어납니다.</li>
+  <li>남은 금액을 근속연수로 나누고 12를 곱해 1년 치 급여처럼 바꿉니다. 이것을 환산급여라고 합니다.</li>
+  <li>환산급여에서 환산급여공제를 뺍니다. 800만 원까지는 전액, 그 위로는 60%, 55%, 45%, 35%를 뺍니다.</li>
+  <li>남은 과세표준에 일반 소득세율(6%~45%)을 적용하고, 다시 12로 나누고 근속연수를 곱합니다.</li>
+</ol>
+<div class="table-scroll"><table>
+  <thead><tr><th>근속연수</th><th>근속연수공제</th></tr></thead>
+  <tbody>
+    <tr><td>5년 이하</td><td>100만 원 x 근속연수</td></tr>
+    <tr><td>5년 초과 10년 이하</td><td>500만 원 + 200만 원 x (근속연수 - 5)</td></tr>
+    <tr><td>10년 초과 20년 이하</td><td>1,500만 원 + 250만 원 x (근속연수 - 10)</td></tr>
+    <tr><td>20년 초과</td><td>4,000만 원 + 300만 원 x (근속연수 - 20)</td></tr>
+  </tbody>
+</table></div>
+<p class="meta">근거: 소득세법 제48조 제1항. 근속연수에 1년이 안 되는 끝수가 있으면 1년으로 봅니다.</p>
+<p>그래서 퇴직소득세는 생각보다 적습니다. 위 예의 5년 1,468만 원에 붙는 퇴직소득세는 152,366원, 지방소득세는 15,236원입니다. 퇴직금의 1% 남짓입니다.</p>
+
+<h2>월급과 근속연수별 퇴직금 예시</h2>
+<div class="table-scroll"><table>
+  <thead><tr><th>월 임금, 근속</th><th>퇴직금</th><th>퇴직소득세</th><th>지방소득세</th><th>세후</th></tr></thead>
+  <tbody>
+    <tr><td>250만 원, 1년</td><td class="num">2,445,652</td><td class="num">18,695</td><td class="num">1,869</td><td class="num">2,425,088</td></tr>
+    <tr><td>300만 원, 5년</td><td class="num">14,681,953</td><td class="num">152,366</td><td class="num">15,236</td><td class="num">14,514,351</td></tr>
+    <tr><td>300만 원, 10년</td><td class="num">29,363,907</td><td class="num">184,733</td><td class="num">18,473</td><td class="num">29,160,701</td></tr>
+    <tr><td>400만 원, 10년</td><td class="num">39,151,876</td><td class="num">419,645</td><td class="num">41,964</td><td class="num">38,690,267</td></tr>
+    <tr><td>500만 원, 20년</td><td class="num">97,893,091</td><td class="num">1,069,433</td><td class="num">106,943</td><td class="num">96,716,715</td></tr>
+  </tbody>
+</table></div>
+<p class="meta">단위 원. 3개월 총일수 92일, 상여금과 연차수당 없음, 월 임금은 3개월 동안 같다고 가정. 재직일수는 1년 365일, 5년 1,826일, 10년 3,652일, 20년 7,305일.</p>
+
+<h2>퇴직금은 IRP 계좌로 들어옵니다</h2>
+<p>2022년 4월부터 퇴직금은 원칙적으로 근로자 이름의 개인형 퇴직연금(IRP) 계좌로 옮기는 방식으로 지급됩니다(퇴직급여법 제9조 제2항). 계좌를 지정하지 않으면 회사가 근로자 이름으로 된 IRP 계좌로 넣습니다(같은 조 제3항). 55세 이후에 퇴직한 경우, 금액이 고용노동부 고시 금액 이하인 경우, 사망한 경우 등은 예외라서 바로 현금으로 받을 수 있습니다(시행령 제3조의2).</p>
+<p>IRP로 받으면 그 시점에는 퇴직소득세를 떼지 않습니다. IRP를 해지해 한꺼번에 꺼내면 그때 위에서 계산한 퇴직소득세를 내고, 55세 이후 연금으로 나눠 받으면 퇴직소득세의 70%만 냅니다. 연금을 받은 해가 10년을 넘으면 60%, 20년을 넘으면 50%로 더 줄어듭니다(소득세법 제129조 제1항 제5호의3). 위 계산기의 "세후 퇴직금"은 IRP를 해지해 한꺼번에 꺼내는 경우의 금액입니다.</p>
+<p>회사가 퇴직연금에 가입해 있으면 퇴직금 대신 퇴직연금으로 받습니다. 확정급여형(DB)은 이 계산기와 같은 방식으로 정해진 금액을 받고, 확정기여형(DC)은 회사가 해마다 연봉의 1/12 이상을 넣어 준 돈과 그 운용 결과를 받으므로 금액이 다를 수 있습니다.</p>
+
+<h2>지급 기한과 못 받았을 때</h2>
+<p>회사는 퇴직한 날부터 14일 안에 퇴직금을 줘야 합니다(퇴직급여법 제9조). 당사자끼리 합의하면 기일을 늦출 수 있습니다. 기한이 지나도 주지 않으면 지연 이자가 붙고, 지방고용노동관서에 진정을 낼 수 있습니다. 고용노동부 고객상담센터(국번 없이 1350)에서 절차를 안내받을 수 있습니다.</p>
+
+<div class="note warn">2027년에 바뀌는 퇴직금 산식과 퇴직소득세 공제는 <span class="badge">발표 전</span>입니다. 이 계산기는 2026년 11월 현재 법령 원문 기준입니다.</div>
+
+<h2>공식 출처</h2>
+<ul class="sources">
+  <li><a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제8조" rel="nofollow">근로자퇴직급여 보장법 제8조(퇴직금제도의 설정 등)</a></li>
+  <li><a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제9조" rel="nofollow">근로자퇴직급여 보장법 제9조(퇴직금의 지급 등)</a></li>
+  <li><a href="https://www.law.go.kr/법령/근로자퇴직급여보장법/제4조" rel="nofollow">근로자퇴직급여 보장법 제4조(퇴직급여제도의 설정)</a></li>
+  <li><a href="https://www.law.go.kr/법령/근로기준법/제2조" rel="nofollow">근로기준법 제2조(정의) 제1항 제6호</a></li>
+  <li><a href="https://www.law.go.kr/법령/소득세법/제48조" rel="nofollow">소득세법 제48조(퇴직소득공제)</a></li>
+  <li><a href="https://www.law.go.kr/법령/소득세법/제55조" rel="nofollow">소득세법 제55조(세율) 제2항</a></li>
+</ul>
+<h2>함께 읽을 글</h2>
+<ul>
+  <li><a href="/guide/severance-average-wage/">퇴직금 계산법: 평균임금과 통상임금의 차이</a></li>
+  <li><a href="/guide/retirement-income-tax/">퇴직소득세는 어떻게 계산되나</a></li>
+  <li><a href="/unemployment/">실업급여 계산기</a></li>
+</ul>
+
+<div class="note">이 계산기와 글은 공개된 법령을 바탕으로 한 일반 정보이며 노무, 세무 상담이 아닙니다. 회사 규정이 법보다 유리하면 회사 규정을 따릅니다. 개인 사정에 따른 판단은 고용노동부(국번 없이 1350)나 국세청(국번 없이 126)에 확인하세요.</div>
+
+<script src="/assets/yearend.js"></script>
+<script src="/assets/labor.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var won = function (n) { return n.toLocaleString('ko-KR') + '원'; };
+  var day = 864e5;
+  function run() {
+    var s = new Date($('start').value), e = new Date($('end').value);
+    if (isNaN(s) || isNaN(e) || e < s) { $('net').textContent = '날짜를 확인하세요'; $('lines').innerHTML = ''; $('netNote').textContent = ''; return; }
+    var out = new Date(e.getTime() + day), back = new Date(out); back.setMonth(back.getMonth() - 3);
+    var days = Math.round((out - s) / day), days3 = Math.round((out - back) / day);
+    var months = (out.getFullYear() - s.getFullYear()) * 12 + out.getMonth() - s.getMonth() + (out.getDate() > s.getDate() ? 1 : 0);
+    var years = Math.max(1, Math.ceil(months / 12));
+    var v = function (id) { return Math.max(0, +$(id).value || 0) * 10000; };
+    var r = Labor.severance({ days: days, wage3: v('wage3'), days3: days3, bonus: v('bonus'), leave: v('leave') });
+    var t = Labor.retireTax(r.pay, years);
+    $('net').textContent = r.pay ? won(r.pay - t.tax - t.local) : '대상 아님';
+    $('netNote').textContent = r.pay ? '세금 떼기 전 퇴직금 ' + won(r.pay) : '계속 일한 기간이 1년(365일) 미만이면 법정 퇴직금이 없습니다';
+    var rows = [['재직일수', days.toLocaleString('ko-KR') + '일'], ['퇴직 전 3개월 총일수', days3 + '일'], ['1일 평균임금', won(r.avg)],
+      ['퇴직금', won(r.pay)], ['근속연수 (끝수 올림)', years + '년'], ['근속연수공제', won(t.yearsDed)], ['환산급여', won(t.conv)],
+      ['환산급여공제', won(t.convDed)], ['과세표준', won(t.base)], ['퇴직소득세', won(t.tax)], ['지방소득세', won(t.local)], ['세후 퇴직금', won(r.pay - t.tax - t.local)]];
+    $('lines').innerHTML = rows.map(function (x, k) {
+      var tag = k === rows.length - 1 ? 'th' : 'td';
+      return '<tr><' + tag + '>' + x[0] + '</' + tag + '><' + tag + ' class="num">' + x[1] + '</' + tag + '></tr>';
+    }).join('');
+  }
+  $('calc').addEventListener('input', run);
+  run();
+})();
+</script>
+</div></main>
+<footer class="site-foot"><div class="wrap">
+  <nav><a href="/about/">소개</a><a href="/contact/">문의</a><a href="/privacy/">개인정보처리방침</a><a href="/disclaimer/">면책 고지</a></nav>
+  <div>이 사이트의 계산과 글은 일반 정보이며 세무, 노무 상담이 아닙니다.</div>
+</div></footer>
+</body>
+</html>
